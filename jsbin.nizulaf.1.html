@@ -1,0 +1,309 @@
+<!doctype html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2024 by SimaoBeep (http://jsbin.com/nizulaf/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>repl.it</title>
+    <link href="src/style.css" rel="stylesheet" type="text/css" />
+  <style id="jsbin-css">
+body {
+    background-color: #567d46;
+    font-family: "Helvetica";
+    color: #f3f3f3;
+}
+
+#main {
+    display: flex;
+    z-index: 20;
+}
+
+#selection {
+    flex-basis: 50%;
+}
+
+#meterContainer {
+    position: relative;
+    padding-left: 5px;
+}
+
+#meterContainer span {
+    position: absolute;
+    top: 2px;
+    left: 26px;
+}
+
+button {
+    font-size: 20px;
+    color: #f3f3f3;
+    outline: none;
+    margin-top: 20px;
+    background: repeating-linear-gradient(45deg, transparent 0, transparent 3px, gray 3px, gray 4px, transparent 5px), repeating-linear-gradient(-45deg, transparent 0, transparent 3px, gray 3px, gray 4px, transparent 5px);
+}
+
+#result {
+    font-size: 40px;
+    position: absolute;
+    top: 47%;
+    left: 46%;
+}
+
+#soccerWrapper {
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    opacity: 0.15;
+    width: 100%;
+    height: 100%;
+}
+
+#soccer {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #FFF;
+  box-shadow: 0 0 55px #000;
+  position: relative;
+  background: #567d46;
+}
+
+#soccer::before {
+  content: '';
+  width: 180px;
+  height: 180px;
+  display: block;
+  border: 2px solid #FFF;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#soccer::after {
+  content: '';
+  width: 9px;
+  height: 9px;
+  display: block;
+  background: #FFF;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#soccer .zone {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #FFF;
+}
+
+#soccer .zone::before,
+#soccer .zone::after {
+  content: '';
+  width: 45px;
+  height: 45px;
+  display: block;
+  border: 2px solid #FFF;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-left: 2px solid transparent;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#soccer .zone::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translate(-50%, 50%) rotate(-45deg);
+}
+
+#soccer .box {
+  width: 162px;
+  height: 396px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-2px, -50%);
+  border: 2px solid #FFF;
+  background: linear-gradient(left, transparent 0, transparent 55px, green 55px), linear-gradient(top, green 0, green 107px, transparent 107px, transparent 291px, green 291px), linear-gradient(left, transparent 0, transparent 53px, #FFF 53px, #FFF 55px, transparent 55px), linear-gradient(top, transparent 0, transparent 107px, #FFF 107px, #FFF 109px, transparent 109px, transparent 288px, #FFF 288px, #FFF 291px, transparent 291px), green;
+}
+
+#soccer .box::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  display: block;
+  background: #FFF;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 95px;
+  transform: translate(0, -50%);
+}
+
+#soccer .box::after {
+  content: '';
+  width: 200px;
+  height: 200px;
+  border: 2px solid #FFF;
+  border-radius: 50%;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-left: 0;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: -12px;
+  transform: translate(0, -50%);
+}
+
+#soccer .zone.right {
+  left: auto;
+  right: 0;
+  transform: rotate(180deg);
+}
+
+
+</style>
+</head>
+  <body>
+    <div id="main">
+      <div id="selection">
+        <div id="players"></div>
+
+        <button id="randomBtn">Ajmooooo!!!</button>
+      </div>
+
+      <div id="result"></div>
+    </div>
+
+    <div id="soccerWrapper">
+      <div id="soccer">
+        <div class="zone left">
+          <span class="box"></span>
+          <span class="net"></span>
+        </div>
+        <div class="zone right">
+          <span class="box"></span>
+          <span class="net"></span>
+        </div>
+      </div>
+    </div>
+
+    <script src="src/script.js"></script>
+  <script id="jsbin-javascript">
+const confederations = ["Europe", "Africa", "The Americas", "Asia / Ocenia"]
+
+const checkedConfederations = [
+  "Europe",
+  "Africa",
+  "The Americas",
+  "Asia / Ocenia",
+]
+
+function showContent() {
+  const inputs = confederations.sort().map((confederation) => {
+    var wrapper = document.createElement("p")
+    var checkConfEl = document.createElement("input")
+
+    checkConfEl.className = "confInputs"
+
+    checkConfEl.setAttribute("type", "checkbox")
+    checkConfEl.checked = true
+    checkConfEl.setAttribute("name", "playersInputs")
+    checkConfEl.setAttribute("value", confederation)
+
+    wrapper.append(checkConfEl)
+    wrapper.insertAdjacentHTML("beforeend", ` ${confederation}`)
+
+    checkConfEl.addEventListener("change", function (e) {
+      if (this.checked) {
+        checkedConfederations.push(this.value)
+      } else {
+        var index = checkedConfederations.indexOf(this.value)
+        if (index !== -1) {
+          checkedConfederations.splice(index, 1)
+        }
+      }
+
+      if (checkedConfederations.length === 0) {
+        randomBtn.setAttribute("disabled", true)
+        console.log("if", checkedConfederations.length)
+      } else {
+        randomBtn.removeAttribute("disabled")
+        console.log("else", checkedConfederations.length)
+      }
+
+      console.log(checkedConfederations)
+    })
+
+    return wrapper
+  })
+
+  document.getElementById("players").append(...inputs)
+}
+
+const confederationTeams = {
+  Europe: ["Austria", "Belgium", "Bosnia & Herzegovina", "Bulgaria", "Croatia", "Czech Republic", "Denmark", "England", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Israel", "Italy", "Montenegro", "Netherlands", "Northern Ireland", "Norway", "Poland", "Portugal", "Romania", "Russia", "Scotland", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey", "Ukraine", "Wales"],
+  Africa: ["Algeria", "Burkina Faso", "Cameroon", "Côte d’Ivoire", "Egypt", "Ghana", "Guinea", "Mali", "Morocco", "Nigeria", "Senegal", "South Africa", "Tunisia", "Zambia"],
+  "The Americas": ["Costa Rica", "Honduras", "Jamaica", "Mexico", "Panama", "United States", "Argentina", "Bolivia", "Brazil", "Chile", "Colombia", "Ecuador", "Paraguay", "Peru", "Uruguay", "Venezuela"],
+  "Asia / Ocenia": ["Australia", "China PR", "Iran", "Iraq", "Japan", "Jordan", "Kuwait", "Lebanon", "North Korea", "Oman", "Qatar", "Saudi Arabia", "South Korea", "Thailand", "United Arab Emirates", "Uzbekistan", "New Zealand"],
+}
+
+const randomBtn = document.getElementById("randomBtn")
+
+randomBtn.addEventListener("click", function () {
+  console.log("randomBtn element", this)
+
+  const allTeamsAccumulated = checkedConfederations.reduce(
+    (accumulator, currentValue) => {
+      const teamsFromConference = confederationTeams[currentValue]
+      console.log("teamsFromConference", teamsFromConference)
+      console.log("accumulator", accumulator)
+      return [...accumulator, ...teamsFromConference]
+    },
+    [],
+  )
+  console.log("allTeamsAccumulated", allTeamsAccumulated)
+  
+  const playerTeam = allTeamsAccumulated[Math.floor(Math.random()*allTeamsAccumulated.length)];
+   
+  const result = document.getElementById("result");
+  result.innerHTML = playerTeam;
+  
+})
+
+
+
+
+window.onload = () => showContent()
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
